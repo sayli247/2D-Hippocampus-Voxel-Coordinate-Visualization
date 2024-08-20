@@ -6,7 +6,7 @@ Created on Tue Jul 30 15:08:01 2024
 @author: saylipatil
 """
 
-# Final Complete Program 
+# Final Program 
 
 import streamlit as st
 import numpy as np
@@ -105,7 +105,7 @@ if uploaded_file is not None:
         x_grid, y_grid = np.meshgrid(x_values, y_values)
         
         # Create a heatmap with black color (no real z-values used)
-        # heatmap was used instead of scatter plot due to slow loading issue
+        # Heatmap was used instead of scatter plot due to slow loading issue
         heatmap = go.Heatmap(
             x=x_grid.flatten(),
             y=y_grid.flatten(),
