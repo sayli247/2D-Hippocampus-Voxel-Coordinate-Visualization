@@ -1,16 +1,16 @@
-A sample file (.xyz file) to test the code.
+# A sample file (.xyz file) to test the code.
 
-Each row contains 9 columns with the following specifics.
-Column 1: Center of voxel, X coordinate (μm).
-Column 2: Center of voxel, Y coordinate (μm).
-Column 3: Center of voxel, Z coordinate (μm).
-Column 4: Septo-Temporal (or Longitudinal) Position (μm).
-Column 5: Transversal Position (μm), which is the position along the 'C'-shape of DG or CA.
-Column 6: Depth (in the layer direction) position (μm).
-Column 7: Bregma position (μm).
-Column 8: Lambda or Inter-Aural Distance (μm).
-Column 9: Type of voxel. This is a number from 1 to 102
-Column 9: 
+# Each row contains 9 columns with the following specifics.
+# Column 1: Center of voxel, X coordinate (μm).
+# Column 2: Center of voxel, Y coordinate (μm).
+# Column 3: Center of voxel, Z coordinate (μm).
+# Column 4: Septo-Temporal (or Longitudinal) Position (μm).
+# Column 5: Transversal Position (μm), which is the position along the 'C'-shape of DG or CA.
+# Column 6: Depth (in the layer direction) position (μm).
+# Column 7: Bregma position (μm).
+# Column 8: Lambda or Inter-Aural Distance (μm).
+# Column 9: Type of voxel. This is a number from 1 to 102
+# Column 9: 
 # 1         DG         ML        Infra         Dorsal        276522
 # 2         DG         ML        Supra         Dorsal        557408
 # 3         DG         ML        Infra         Posterior     298641
