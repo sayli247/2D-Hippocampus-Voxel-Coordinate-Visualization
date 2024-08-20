@@ -1,0 +1,5 @@
+Step 1: Load the .xyz file 
+Step 2: Select a slice corresponding to a particular z-coordinate
+(Before and after slices of the current slice will be displayed)
+Step 3: Choose Add or Delete option to add or delete points respectively
+Step 4: Save the file
