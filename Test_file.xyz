@@ -1,4 +1,5 @@
 A sample file (.xyz file) to test the code.
+
 Each row contains 9 columns with the following specifics.
 Column 1: Center of voxel, X coordinate (μm).
 Column 2: Center of voxel, Y coordinate (μm).
@@ -16,7 +17,6 @@ Column 9:
 # 4         DG         ML        Supra         Posterior     499978
 # 5         DG         ML        Infra         Ventral       134495
 # 6         DG         ML        Supra         Ventral       199575
-
 # 7         DG         GC        Infra         Dorsal        155244
 # 8         DG         GC        Supra         Dorsal        243121
 # 9         DG         GC        Infra         Posterior     128594
