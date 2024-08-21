@@ -1,4 +1,4 @@
-# 3D Hippocampus Voxel Coordinate Visualization
+# 2D Hippocampus Voxel Coordinate Visualization
 
 A python application created using Streamlit to visualize and edit hippocampus slice images by adding or deleting the points.
 
