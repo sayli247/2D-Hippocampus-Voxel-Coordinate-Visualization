@@ -14,6 +14,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 from streamlit_plotly_events import plotly_events
 import datetime
+from shift_on_grid import shift_on_grid
+
+finished_gridding = False
 
 # Function to load .xyz file
 def load_xyz(file):
@@ -27,7 +30,13 @@ def save_xyz(data, filename):
 # Initialize or retrieve the list of additional points from session state
 if 'additional_points' not in st.session_state:
     st.session_state.additional_points = []
-    
+
+# Initialize finished_gridding to keep track of when gridding is done in session state
+if "finished_gridding" not in st.session_state:
+    st.session_state.finished_gridding = False
+if "gridded_np_data" not in st.session_state:
+    st.session_state.gridded_np_data = None
+
 # Streamlit UI
 st.title("2D Slice Viewer")
 
@@ -91,7 +100,7 @@ if uploaded_file is not None:
     st.plotly_chart(fig, use_container_width=True)
     
     # Radio buttons for choosing mode
-    mode = st.radio("Choose action:", ("","Add points", "Delete points"), index = 0)
+    mode = st.radio("Choose action:", ("","Add points", "Delete points", "Grid points"), index = 0)
     
     if mode == "Add points":
         # Define the dimensions of the grid with padding
@@ -222,7 +231,9 @@ if uploaded_file is not None:
                     
     elif mode == "Delete points":
         # Display the Plotly figure and capture click events
-        selected_points = plotly_events(fig, click_event=True)
+        # selected_points = plotly_events(fig, click_event=True)
+        selected_points = plotly_events(fig, select_event=True)
+
 
         # Use session state to keep track of removed points
         if 'removed_points' not in st.session_state:
@@ -230,19 +241,24 @@ if uploaded_file is not None:
 
         if selected_points:
             # Get the first selected point
-            point_to_remove = selected_points[0]
+            # point_to_remove = selected_points[0]
+            points_to_remove = selected_points
 
             # Print the coordinates of the selected point
-            st.write(f"The selected point is: x: {point_to_remove['x']}, y: {point_to_remove['y']}")
+            st.write("The selected points are: ")
+            for elem in selected_points:
+                st.write(f"x: {elem['x']}, y: {elem['y']}")
 
             # Button to remove the point
-            if st.button("Remove selected point"):
+            if st.button("Remove selected points"):
                 # Parse the selected point's coordinates
-                point_x = point_to_remove['x']
-                point_y = point_to_remove['y']
 
-                # Add the point to the removed points list
-                st.session_state.removed_points.append((point_x, point_y))
+                for elem in selected_points:
+                    point_x = elem['x']
+                    point_y = elem['y']
+                    
+                    # Add the point to the removed points list
+                    st.session_state.removed_points.append((point_x, point_y))
 
                 # Filter out removed points from slice_data
                 mask = np.array([(x, y) not in st.session_state.removed_points for x, y in zip(slice_data[:, 0], slice_data[:, 1])])
@@ -272,7 +288,36 @@ if uploaded_file is not None:
                 
                 st.write(f"Updated .xyz file saved as {filename}")
                 
-                
+    elif mode == "Grid points": 
+        # Start gridding when radio button pressed
+        import time
+        st.write("Points are gridded to the nearest bin that is a multiple of 16")
+        time.sleep(1)
+        if not st.session_state.finished_gridding:
+            print("inside with loop")
+            with st.spinner(text="Gridding... this will take a few minutes"):
+                # Run shift_on_grid function to grid the points and put into numpy array
+                gridded_data = shift_on_grid(data) # Grid the data (long runtime)
+                st.session_state.gridded_np_data = np.asarray(gridded_data, dtype=np.float64) # Convert to numpy array
+                st.session_state.finished_gridding = True
+
+        gridded_np_data = st.session_state.gridded_np_data
+        # Grab updated slice data
+        gridded_slice_data = gridded_np_data[gridded_np_data[:, 2] == selected_z]
+        # Re-plot the updated slice data
+        fig = px.scatter(x=gridded_slice_data[:, 0], y=gridded_slice_data[:, 1], title=f"Updated 2D Slice at z = {selected_z}", template="plotly")
+        st.plotly_chart(fig)
+
+        # Load in save button for the data
+        if st.session_state.finished_gridding:
+            save_file = st.button("Save shifted data")
+            if save_file:
+                print("pressed save file")
+                save_xyz(gridded_np_data, "gridded_data.xyz")
+                st.success("Shifted data saved to 'gridded_data.xyz'")
+
+    
+    
     else:
         st.write("No action selected")
 
